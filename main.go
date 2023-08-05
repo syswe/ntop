@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"sort"
@@ -21,14 +22,23 @@ type ResourceUsage struct {
 
 func main() {
 	kubeconfig := filepath.Join(os.Getenv("HOME"), ".kube", "config")
-	config, _ := clientcmd.BuildConfigFromFlags("", kubeconfig)
-	clientset, _ := kubernetes.NewForConfig(config)
+	config, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
+	if err != nil {
+		log.Fatalf("Failed to build config: %v", err)
+	}
+	clientset, err := kubernetes.NewForConfig(config)
+	if err != nil {
+		log.Fatalf("Failed to create clientset: %v", err)
+	}
 
 	// Create a context
 	ctx := context.Background()
 
 	// List Nodes
-	nodes, _ := clientset.CoreV1().Nodes().List(ctx, v1.ListOptions{})
+	nodes, err := clientset.CoreV1().Nodes().List(ctx, v1.ListOptions{})
+	if err != nil {
+		log.Fatalf("Failed to list nodes: %v", err)
+	}
 	var nodeUsages []ResourceUsage
 	for _, node := range nodes.Items {
 		// Use node to get the resource usages.
@@ -52,7 +62,10 @@ func main() {
 	fmt.Println()
 
 	// List Pods
-	pods, _ := clientset.CoreV1().Pods("").List(ctx, v1.ListOptions{})
+	pods, err := clientset.CoreV1().Pods("").List(ctx, v1.ListOptions{})
+	if err != nil {
+		log.Fatalf("Failed to list pods: %v", err)
+	}
 	var podUsages []ResourceUsage
 	for _, pod := range pods.Items {
 		// Use pod to get the resource usages and store in ResourceUsage slice.
