@@ -1,3 +1,7 @@
+![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/w/canberkdmn/ntop/main?style=for-the-badge) ![GitHub release (with filter)](https://img.shields.io/github/v/release/canberkdmn/ntop?style=for-the-badge) ![GitHub contributors](https://img.shields.io/github/contributors/canberkdmn/ntop?style=for-the-badge) ![GitHub Repo stars](https://img.shields.io/github/stars/canberkdmn/ntop?style=for-the-badge)
+
+
+
 # Kubernetes Node & Pod Metrics Tool
 
 ![ntop-logo](https://i.ibb.co/WzWRNcz/ntop-logo.png)
