@@ -1,15 +1,12 @@
-![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/w/canberkdmn/ntop/main?style=for-the-badge) ![GitHub release (with filter)](https://img.shields.io/github/v/release/canberkdmn/ntop?style=for-the-badge) ![GitHub contributors](https://img.shields.io/github/contributors/canberkdmn/ntop?style=for-the-badge) ![GitHub Repo stars](https://img.shields.io/github/stars/canberkdmn/ntop?style=for-the-badge)
-
-
-
 # Kubernetes Node & Pod Metrics Tool
-
 ![ntop-logo](https://i.ibb.co/WzWRNcz/ntop-logo.png)
 
 ntop is an open source tool that allows you to visually and clearly see the status of all your nodes on Kubernetes with kubectl.
 
-
 This tool fetches and displays the CPU and memory utilization metrics of Kubernetes nodes and pods. It leverages Kubernetes' metrics server to retrieve data and provides a command-line interface for easy consumption. The data is tabulated for clarity using the `tablewriter` package.
+
+![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/w/canberkdmn/ntop/main?style=for-the-badge) ![GitHub release (with filter)](https://img.shields.io/github/v/release/canberkdmn/ntop?style=for-the-badge) ![GitHub contributors](https://img.shields.io/github/contributors/canberkdmn/ntop?style=for-the-badge) ![GitHub Repo stars](https://img.shields.io/github/stars/canberkdmn/ntop?style=for-the-badge)
+
 
 ## Table of Contents
 1. [Installation](#installation)
