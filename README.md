@@ -58,6 +58,8 @@ By default, the tool will order the pod listings by memory usage. If you want to
 ./ntop-linux-64-0.1.6 --kubeconfig=path/to/your/kubeconfig --pods-order-by=cpu
 ```
 
+![Example usage of NTOP 0.1.5 ver](example-ntop.jpg)
+
 ## Features
 
 - Display CPU and memory usage metrics for all nodes in a Kubernetes cluster.
