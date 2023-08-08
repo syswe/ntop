@@ -126,9 +126,6 @@ Our vision is to enhance the utility and ease-of-use of the Kubernetes Node & Po
 
 This roadmap provides a glimpse of potential paths forward. The order of execution, feasibility, and the exact details of each point may evolve based on feedback, project needs, and community interest.
 
-Pull requests and issues are welcome. Please follow the typical PR process for contributions.
-
-
 ### Contribution:
 
 Pull requests and issues are welcome. Please follow the typical PR process for contributions.
