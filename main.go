@@ -157,16 +157,6 @@ func main() {
 	ticker := time.NewTicker(500 * time.Millisecond)
 	defer ticker.Stop()
 
-	// for _, metrics := range nodeMetricsList.Items {
-	// 	cpuUsage := metrics.Usage[corev1.ResourceCPU]
-	// 	cpuUsageCores := float64(cpuUsage.MilliValue()) / 1000
-
-	// 	memoryUsage := metrics.Usage[corev1.ResourceMemory]
-	// 	memoryUsageGib := float64(memoryUsage.Value()) / 1024 / 1024 / 1024
-
-	// 	table.Append([]string{metrics.Name, fmt.Sprintf("%.3f", cpuUsageCores), fmt.Sprintf("%.3f", memoryUsageGib)})
-	// }
-
 	// Handle key q to quit
 	uiEvents := ui.PollEvents()
 	for {
