@@ -46,6 +46,18 @@ GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o ntop-linux-64-0.1.6
 
 ## Usage
 
+Before running ntop, you should install metrics-server on your cluster 
+
+Installing metrics server: 
+
+``` 
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+```
+
+NOTE: If you got SSL/TLS Error, you should use --kubelet-insecure-tls flag inside components.yaml 
+
+
+
 After building the project, you can run the tool:
 
 ```
@@ -58,7 +70,7 @@ By default, the tool will order the pod listings by memory usage. If you want to
 ./ntop-linux-64-0.1.6 --kubeconfig=path/to/your/kubeconfig --pods-order-by=cpu
 ```
 
-![Example usage of NTOP 0.1.5 ver](example-ntop.jpg)
+![Example usage of NTOP 0.1.6 ver](example-ntop.jpg)
 
 ## Features
 
