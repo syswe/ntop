@@ -20,6 +20,7 @@ import (
 
 	ui "github.com/gizak/termui/v3"
 	"github.com/gizak/termui/v3/widgets"
+
 )
 
 func main() {
@@ -30,6 +31,9 @@ func main() {
 	// kubeconfig := flag.String("kubeconfig", "/Users/abcd/.kube/config", "location to your kubeconfig file")
 	kubeconfig := flag.String("kubeconfig", filepath.Join(homeDir, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
 	podsOrder := flag.String("pods-order-by", "memory", "order pods listing by 'cpu' or 'memory'")
+	var verbose = flag.Bool("verbose", false, "enable verbose output")
+
+	flag.Parse() // parse the flags
 
 	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
 	if err != nil {
@@ -51,6 +55,7 @@ func main() {
 		panic(err.Error())
 	}
 
+	
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{"Node", "CPU Usage (Cores)", "Memory Usage (GiB)"})
 
@@ -66,6 +71,7 @@ func main() {
 
 	table.Render()
 
+
 	pods, err := clientset.CoreV1().Pods("").List(context.Background(), v1.ListOptions{})
 	if err != nil {
 		panic(err.Error())
@@ -74,16 +80,22 @@ func main() {
 	type PodInfo struct {
 		PodName       string
 		ContainerName string
+		Namespace     string
 		CPUUsage      float64
 		MemoryUsage   float64
 	}
 
 	var podInfoList []PodInfo
+	fmt.Println("We're calculating your all pods in your cluster. Please wait.")
+	done := make(chan bool)
+    go showLoadingBar(done)
 
 	for _, pod := range pods.Items {
 		podMetrics, err := metricsClient.MetricsV1beta1().PodMetricses(pod.Namespace).Get(context.Background(), pod.Name, v1.GetOptions{})
 		if err != nil {
-			fmt.Println("Error getting pod metrics:", err)
+			if *verbose {
+				fmt.Printf("Error getting pod metrics for %s: %v\n", pod.Name, err)
+			}
 			continue
 		}
 
@@ -94,9 +106,12 @@ func main() {
 			memoryUsage := container.Usage[corev1.ResourceMemory]
 			memoryUsageMib := float64(memoryUsage.Value()) / 1024 / 1024
 
-			podInfoList = append(podInfoList, PodInfo{pod.Name, container.Name, cpuUsageCores, memoryUsageMib})
+			podInfoList = append(podInfoList, PodInfo{pod.Name, container.Name, pod.Namespace, cpuUsageCores, memoryUsageMib})
 		}
 	}
+
+	done <- true // Signal to stop the loading bar
+    fmt.Println("\nCalculations Complete")
 
 	switch *podsOrder {
 	case "cpu":
@@ -110,10 +125,10 @@ func main() {
 	}
 
 	table = tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"Pod", "Container", "CPU Usage (Cores)", "Memory Usage (MiB)"})
+	table.SetHeader([]string{"Pod", "Container", "Namespace", "CPU Usage (Cores)", "Memory Usage (MiB)"})
 
 	for _, podInfo := range podInfoList {
-		table.Append([]string{podInfo.PodName, podInfo.ContainerName, fmt.Sprintf("%.3f", podInfo.CPUUsage), fmt.Sprintf("%.3f", podInfo.MemoryUsage)})
+		table.Append([]string{podInfo.PodName, podInfo.ContainerName, podInfo.Namespace, fmt.Sprintf("%.3f", podInfo.CPUUsage), fmt.Sprintf("%.3f", podInfo.MemoryUsage)})
 	}
 
 	table.Render()
@@ -128,7 +143,7 @@ func main() {
 	nodeTable.TextStyle = ui.NewStyle(ui.ColorWhite)
 	nodeTable.RowSeparator = true
 	nodeTable.BorderStyle = ui.NewStyle(ui.ColorGreen)
-	nodeTable.SetRect(0, 0, 50, 10)
+	nodeTable.SetRect(0, 0, 50, 20)
 
 	updateData := func() {
 		nodeTable.Rows = [][]string{
@@ -157,6 +172,8 @@ func main() {
 	ticker := time.NewTicker(500 * time.Millisecond)
 	defer ticker.Stop()
 
+
+
 	// Handle key q to quit
 	uiEvents := ui.PollEvents()
 	for {
@@ -169,4 +186,21 @@ func main() {
 			updateData()
 		}
 	}
+
+
+
 }
+
+
+func showLoadingBar(done chan bool) {
+    for {
+        select {
+        case <-done:
+            return
+        default:
+            fmt.Print(".")
+            time.Sleep(500 * time.Millisecond) // Adjust the speed as needed
+        }
+    }
+}
+
