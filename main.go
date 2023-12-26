@@ -4,17 +4,22 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"log"
+	"os"
+	"path/filepath"
+	"sort"
+	"time"
+
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 	metricsv "k8s.io/metrics/pkg/client/clientset/versioned"
-	"log"
-	"os"
-	"path/filepath"
-	"sort"
 
 	"github.com/olekukonko/tablewriter"
+
+	ui "github.com/gizak/termui/v3"
+	"github.com/gizak/termui/v3/widgets"
 )
 
 func main() {
@@ -112,4 +117,56 @@ func main() {
 	}
 
 	table.Render()
+
+	if err := ui.Init(); err != nil {
+		log.Fatalf("failed to initialize termui: %v", err)
+	}
+	defer ui.Close()
+
+	// Create table for node metrics
+	nodeTable := widgets.NewTable()
+	nodeTable.TextStyle = ui.NewStyle(ui.ColorWhite)
+	nodeTable.RowSeparator = true
+	nodeTable.BorderStyle = ui.NewStyle(ui.ColorGreen)
+	nodeTable.SetRect(0, 0, 50, 10)
+
+	updateData := func() {
+		nodeTable.Rows = [][]string{
+			{"Node", "CPU Usage (Cores)", "Memory Usage (GiB)"},
+		}
+
+		nodeMetricsList, err := metricsClient.MetricsV1beta1().NodeMetricses().List(context.Background(), v1.ListOptions{})
+		if err != nil {
+			panic(err.Error())
+		}
+
+		for _, metrics := range nodeMetricsList.Items {
+			cpuUsage := metrics.Usage[corev1.ResourceCPU]
+			cpuUsageCores := float64(cpuUsage.MilliValue()) / 1000
+			memoryUsage := metrics.Usage[corev1.ResourceMemory]
+			memoryUsageGib := float64(memoryUsage.Value()) / 1024 / 1024 / 1024
+			nodeTable.Rows = append(nodeTable.Rows, []string{metrics.Name, fmt.Sprintf("%.3f", cpuUsageCores), fmt.Sprintf("%.3f", memoryUsageGib)})
+		}
+
+		ui.Render(nodeTable)
+	}
+
+	updateData()
+
+	// Ticker for updating data
+	ticker := time.NewTicker(500 * time.Millisecond)
+	defer ticker.Stop()
+
+	// Handle key q to quit
+	uiEvents := ui.PollEvents()
+	for {
+		select {
+		case e := <-uiEvents:
+			if e.ID == "q" || e.Type == ui.KeyboardEvent {
+				return
+			}
+		case <-ticker.C:
+			updateData()
+		}
+	}
 }
