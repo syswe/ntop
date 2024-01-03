@@ -29,7 +29,7 @@ This tool fetches and displays the CPU and memory utilization metrics of Kuberne
 Clone the repository to your local machine:
 
 ```
-git clone https://github.com/canberkdmn/ntop
+git clone https://github.com/devopswe/ntop
 ```
 
 Navigate to the project directory:
