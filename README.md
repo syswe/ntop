@@ -66,11 +66,10 @@ Optional flags:
 - Toggle between node and pod views with ease.
 - Customize the number of pods displayed.
 - Simple and intuitive command-line interface.
-- Utilizes `tablewriter` for clear, tabulated displays.
 
 ## 🌟 What's New in 0.2.0
 
-- Live table display of nodes and pods.
+- New **live** table display of nodes and pods.
 - `--pods` flag to easily switch to pod metrics.
 - `--countpods` flag to specify the number of pods displayed.
 - Improved performance and reduced waiting times.
@@ -83,7 +82,6 @@ Special thanks to [@dbtek](https://github.com/dbtek) and [@faruktoptas](https://
 
 ### Dependencies:
 - `k8s.io/client-go` and `k8s.io/metrics` for Kubernetes interaction.
-- `github.com/olekukonko/tablewriter` for rendering terminal tables.
 
 Use `go mod tidy` to manage dependencies.
 
