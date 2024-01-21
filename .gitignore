@@ -11,6 +11,8 @@
 *.dll
 *.so
 *.dylib
+*ntop-*-amd64*
+*ntop-*-arm64*
 
 # Test binary, built with `go test -c`
 *.test
