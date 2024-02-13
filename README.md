@@ -55,10 +55,10 @@ Optional flags:
 - `--countpods=<number>`: Specify the number of pods to display (default is 10).
 
 ### Listing Nodes Example:
-![Example nodes listing of NTOP 0.2.0](nodes-list.png)
+![Example nodes listing of NTOP 0.2.0](assets/nodes-list.png)
 
 ### Listing Top Pods Example:
-![Example pods listing of NTOP 0.2.0](top-pods-list.png)
+![Example pods listing of NTOP 0.2.0](assets/top-pods-list.png)
 
 ## ⭐ Features
 
