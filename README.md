@@ -85,7 +85,7 @@ Special thanks to [@dbtek](https://github.com/dbtek) and [@faruktoptas](https://
 
 Use `go mod tidy` to manage dependencies.
 
-## 🗺 Roadmap
+##  Roadmap
 
 Our vision for ntop includes:
 
@@ -103,7 +103,3 @@ Contributions are welcome! Please follow the standard PR process for your contri
 ## 📜 License
 
 Licensed under the Apache License, Version 2.0. See the [LICENSE](LICENSE) file for details.
-
----
-
-Enhance your Kubernetes monitoring with **ntop**. Try it out and let us know your thoughts!
